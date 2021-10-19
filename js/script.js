@@ -35,7 +35,7 @@ submitBtn.addEventListener('click', evt => {
     evt.preventDefault();
     const name = productNameElm.value;
     const price = productPriceElm.value;
-    if (name === '' || isNaN(price)){
+    if (name === '' || isNaN(price) || !(!isNaN(parseFloat(price)) && isFinite(price))){
         alert("Please input necessary information.");
     }
     else {
