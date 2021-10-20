@@ -8,7 +8,6 @@ const productCollectionElm = document.querySelector(".collection");
 const msgElm = document.querySelector(".msg");
 
 // data / state
-let serial = 0;
 const productData = [];
 
 function getData(productList) {
@@ -35,12 +34,18 @@ submitBtn.addEventListener('click', evt => {
     evt.preventDefault();
     const name = productNameElm.value;
     const price = productPriceElm.value;
+    let id;
+    if (productData.length === 0){
+        id = 0;
+    }else{
+        id = productData[productData.length - 1].id + 1;
+    }
     if (name === '' || isNaN(price) || !(!isNaN(parseFloat(price)) && isFinite(price))){
         alert("Please input necessary information.");
     }
     else {
         productData.push({
-            id: serial++,
+            id: id,
             name: name,
             price: price
         })
