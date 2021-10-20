@@ -71,3 +71,18 @@ productCollectionElm.addEventListener('click', evt => {
 
     });
 })
+
+// filter product items / search products
+filterInputElm.addEventListener('keyup', evt => {
+    let inputText = evt.target.value;
+    // console.log(evt.target.value);
+    document.querySelectorAll(".collection .collection-item").forEach((items =>{
+        let productName = items.firstElementChild.textContent;
+        // console.log(items.firstElementChild.textContent);
+        if (productName.indexOf(inputText) === -1){
+            items.style.display = 'none';
+        }else {
+            items.style.display = 'block';
+        }
+    }))
+})
