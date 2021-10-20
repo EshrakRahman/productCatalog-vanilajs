@@ -8,7 +8,7 @@ const productCollectionElm = document.querySelector(".collection");
 const msgElm = document.querySelector(".msg");
 
 // data / state
-const productData = [];
+let productData = [];
 
 function getData(productList) {
     if (productData.length > 0){
@@ -54,6 +54,20 @@ submitBtn.addEventListener('click', evt => {
         productCollectionElm.innerHTML = '';
         getData(productData);
     }
-    console.log(productData);
+    //console.log(productData);
 });
 
+// Delete items
+productCollectionElm.addEventListener('click', evt => {
+    console.log(evt.target.classList.contains('delete-product'));
+        const deleteItems = evt.target.parentElement;
+    if (evt.target.classList.contains('delete-product')){
+        evt.target.parentElement.parentElement.removeChild(deleteItems);
+    }
+    const productId = Number(deleteItems.id.split('-')[1]);
+    console.log(productId);
+    productData = productData.filter((product) => {
+        return product.id !== productId;
+
+    });
+})
