@@ -30,37 +30,39 @@ function getData(productList) {
 }
 getData(productData);
 
-submitBtn.addEventListener('click', evt => {
-    evt.preventDefault();
-    const name = productNameElm.value;
-    const price = productPriceElm.value;
-    let id;
-    if (productData.length === 0){
-        id = 0;
-    }else{
-        id = productData[productData.length - 1].id + 1;
+// add product
+const addProduct = (evt) =>{
+    {
+        evt.preventDefault();
+        const name = productNameElm.value;
+        const price = productPriceElm.value;
+        let id;
+        if (productData.length === 0){
+            id = 0;
+        }else{
+            id = productData[productData.length - 1].id + 1;
+        }
+        if (name === '' || isNaN(price) || !(!isNaN(parseFloat(price)) && isFinite(price))){
+            alert("Please input necessary information.");
+        }
+        else {
+            productData.push({
+                id: id,
+                name: name,
+                price: price
+            })
+            productNameElm.value = '';
+            productPriceElm.value = '';
+            productCollectionElm.innerHTML = '';
+            getData(productData);
+        }
     }
-    if (name === '' || isNaN(price) || !(!isNaN(parseFloat(price)) && isFinite(price))){
-        alert("Please input necessary information.");
-    }
-    else {
-        productData.push({
-            id: id,
-            name: name,
-            price: price
-        })
-        productNameElm.value = '';
-        productPriceElm.value = '';
-        productCollectionElm.innerHTML = '';
-        getData(productData);
-    }
-    //console.log(productData);
-});
+};
 
-// Delete items
-productCollectionElm.addEventListener('click', evt => {
+// delete items
+const deleteItem = (evt) => {
     console.log(evt.target.classList.contains('delete-product'));
-        const deleteItems = evt.target.parentElement;
+    const deleteItems = evt.target.parentElement;
     if (evt.target.classList.contains('delete-product')){
         evt.target.parentElement.parentElement.removeChild(deleteItems);
     }
@@ -68,21 +70,31 @@ productCollectionElm.addEventListener('click', evt => {
     console.log(productId);
     productData = productData.filter((product) => {
         return product.id !== productId;
-
-    });
-})
+    })
+};
 
 // filter product items / search products
-filterInputElm.addEventListener('keyup', evt => {
+const filterSearch = (evt) => {
     let inputText = evt.target.value;
     // console.log(evt.target.value);
     document.querySelectorAll(".collection .collection-item").forEach((items =>{
         let productName = items.firstElementChild.textContent;
         // console.log(items.firstElementChild.textContent);
         if (productName.indexOf(inputText) === -1){
+            msgElm.innerHTML = "No items to show!";
             items.style.display = 'none';
         }else {
+            msgElm.innerHTML = "";
             items.style.display = 'block';
         }
     }))
-})
+};
+
+// all event listener
+function loadEventListener() {
+    submitBtn.addEventListener('click', addProduct);
+    productCollectionElm.addEventListener('click', deleteItem);
+    filterInputElm.addEventListener('keyup', filterSearch);
+}
+
+loadEventListener();
