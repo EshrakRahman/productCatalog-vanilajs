@@ -8,7 +8,40 @@ const productCollectionElm = document.querySelector(".collection");
 const msgElm = document.querySelector(".msg");
 
 // data / state
-let productData = [];
+let productData = getDataLocalStorageData();
+function getDataLocalStorageData() {
+    let items = '';
+    if (localStorage.getItem('productItems') === null){
+        items = [];
+    }else {
+        items = JSON.parse(localStorage.getItem('productItems'));
+    }
+    return items;
+}
+
+function addDataToLocalStorage(item) {
+    let items = '';
+    if (localStorage.getItem('productItems') === null) {
+        items = []
+        items.push(item);
+        localStorage.setItem('productItems', JSON.stringify(items));
+    }else {
+        items = JSON.parse(localStorage.getItem('productItems'));
+        items.push(item);
+        localStorage.setItem('productItems', JSON.stringify(items));
+    }
+}
+
+function deleteItemsFormLocalStorage(id) {
+    let items = JSON.parse(localStorage.getItem('productItems'))
+
+    let result = items.filter((productItems) =>{
+       return  productItems.id !== id;
+    })
+    localStorage.setItem('productItems', JSON.stringify(result));
+}
+
+
 
 function getData(productList) {
     if (productData.length > 0){
@@ -46,11 +79,13 @@ const addProduct = (evt) =>{
             alert("Please input necessary information.");
         }
         else {
-            productData.push({
+            let data = {
                 id: id,
                 name: name,
                 price: price
-            })
+            }
+            productData.push(data);
+            addDataToLocalStorage(data);
             productNameElm.value = '';
             productPriceElm.value = '';
             productCollectionElm.innerHTML = '';
@@ -67,7 +102,7 @@ const deleteItem = (evt) => {
         evt.target.parentElement.parentElement.removeChild(deleteItems);
     }
     const productId = Number(deleteItems.id.split('-')[1]);
-    console.log(productId);
+    deleteItemsFormLocalStorage(productId);
     productData = productData.filter((product) => {
         return product.id !== productId;
     })
@@ -79,13 +114,19 @@ const filterSearch = (evt) => {
     // console.log(evt.target.value);
     document.querySelectorAll(".collection .collection-item").forEach((items =>{
         let productName = items.firstElementChild.textContent;
+        let itemMessage = 0;
         // console.log(items.firstElementChild.textContent);
         if (productName.indexOf(inputText) === -1){
-            msgElm.innerHTML = "No items to show!";
             items.style.display = 'none';
         }else {
             msgElm.innerHTML = "";
             items.style.display = 'block';
+            ++itemMessage;
+        }
+        if (itemMessage > 0){
+            msgElm.innerHTML = "";
+        } else{
+            msgElm.innerHTML = "No items to show!";
         }
     }))
 };
@@ -98,3 +139,4 @@ function loadEventListener() {
 }
 
 loadEventListener();
+
